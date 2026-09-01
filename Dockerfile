@@ -41,7 +41,8 @@ COPY . .
 RUN composer install \
     --no-dev \
     --optimize-autoloader \
-    --no-interaction
+    --no-interaction \
+    -vvv
 
 # Install JavaScript dependencies
 RUN npm install

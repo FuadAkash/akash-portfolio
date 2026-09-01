@@ -27,4 +27,5 @@ Homestead.yaml
 Thumbs.db
 /config.zip
 /vendor.zip
+/public/build.zip
 
