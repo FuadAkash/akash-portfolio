@@ -141,12 +141,6 @@ const SKILLS = [
             'ISO 8583',
             'Transware',
             'Hypercom',
-            'SmartVista',
-            'Visa',
-            'Mastercard',
-            'UnionPay',
-            'NPSB',
-            'American Express',
             'Card Payment Processing',
             'Payment Gateways'
         ]
@@ -1601,6 +1595,7 @@ function ProjectCard({ project, onOpen, delay }) {
 }
 function ProjectModal({ project, onClose }) {
     const [index, setIndex] = useState(0);
+    const [zoomed, setZoomed] = useState(false);
 
     useEffect(() => {
         setIndex(0);
@@ -1608,7 +1603,9 @@ function ProjectModal({ project, onClose }) {
 
     useEffect(() => {
         const handler = (e) => {
-            if (e.key === 'Escape') onClose();
+            if (e.key !== 'Escape') return;
+            if (zoomed) setZoomed(false);
+            else onClose();
         };
 
         window.addEventListener('keydown', handler);
@@ -1618,8 +1615,7 @@ function ProjectModal({ project, onClose }) {
             window.removeEventListener('keydown', handler);
             document.body.style.overflow = '';
         };
-    }, [onClose]);
-
+    }, [onClose, zoomed]);
     if (!project) return null;
 
     const total = project.screenshots.length;
@@ -1678,6 +1674,16 @@ function ProjectModal({ project, onClose }) {
                                 className="icon-btn absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center"
                             >
                                 <ChevronRight className="w-5 h-5" />
+                            </button>
+                        )}
+                        {typeof project.screenshots[index] === 'string' && (
+                            <button
+                                onClick={() => setZoomed(true)}
+                                aria-label="View image full size"
+                                className="icon-btn absolute top-3 right-14 w-9 h-9 rounded-full flex items-center justify-center"
+                                style={{ zIndex: 10 }}
+                            >
+                                <Eye className="w-5 h-5" />
                             </button>
                         )}
 
@@ -1791,6 +1797,29 @@ function ProjectModal({ project, onClose }) {
                         )}
                     </div>
                 </div>
+                {/* Full-size image overlay */}
+                {zoomed && (
+                    <div
+                        className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+                        style={{ backgroundColor: 'rgba(14,26,28,0.96)' }}
+                        onClick={() => setZoomed(false)}
+                    >
+                        <img
+                            src={project.screenshots[index]}
+                            alt={`${project.title} screenshot ${index + 1} enlarged`}
+                            className="max-w-full max-h-full object-contain rounded-lg"
+                            onClick={(e) => e.stopPropagation()}
+                        />
+
+                        <button
+                            onClick={() => setZoomed(false)}
+                            aria-label="Close full size view"
+                            className="icon-btn absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center"
+                        >
+                            <X className="w-5 h-5" />
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );
