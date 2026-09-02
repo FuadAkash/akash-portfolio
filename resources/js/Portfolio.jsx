@@ -30,6 +30,7 @@ import {
     Cpu,
     BarChart2,
     LineChart,
+    Eye,
 } from 'lucide-react';
 
 /* ------------------------------------------------------------------ */
@@ -85,13 +86,13 @@ const EXPERIENCE = [
         period: 'October, 2024 — July, 2026',
         description: [
             'Android POS payment application development',
+            'Spring Boot and Laravel backend development',
             'ISO 8583 payment protocol integration',
             'PAX POS, IoT, and kiosk device integration',
             'Banking and fintech payment solutions',
             'bKash IoT sound-box and MQTT integration',
             'QR-based digital receipt management system',
             'Self-service restaurant kiosk development',
-            'Spring Boot and Laravel backend development',
             'Hardware SDK integration and R&D',
             'Payment gateway and API integration',
             'Technical product demonstrations and client support',
@@ -165,11 +166,11 @@ const SKILLS = [
     },
     {
         category: 'Frameworks & Platforms',
-        items: ['Laravel', 'Spring Boot', 'Android SDK', 'React', 'Flutter', 'ASP .NET Core'],
+        items: ['Laravel', 'Spring Boot', 'Java Android', 'React', 'Flutter', 'ASP .NET Core'],
     },
     {
         category: 'Data & Infrastructure',
-        items: ['MySQL', 'MSSQL', 'Firebase', 'Docker', 'Git'],
+        items: ['MySQL', 'MSSQL', 'Firebase', 'Docker', 'CI/CD','Git'],
     },
     {
         category: 'Frontend Development',
@@ -196,7 +197,7 @@ const SERVICES = [
         icon: Globe,
         title: 'Web Application & Portal Development',
         description:
-            'Full-stack web portals for payment management, employee systems, and support ticketing — built with clean architecture and designed for banks, merchants, and internal teams.',
+            'Full-stack web portals for payment management, employee systems, support ticketing, e-commerce — built with clean architecture and designed for banks, merchants, and internal teams.',
     },
     {
         icon: Smartphone,
@@ -1538,26 +1539,24 @@ function Services() {
 function ProjectCard({ project, onOpen, delay }) {
     return (
         <Reveal delay={delay}>
-            <div className="group card rounded-2xl overflow-hidden">
+            <div className="group card rounded-2xl overflow-hidden flex flex-col">
                 <div
                     className="relative aspect-video overflow-hidden"
                     style={{ backgroundColor: 'var(--panel-2)' }}
                 >
-                    {/* Thumbnail image */}
                     <img
-                        src={
-                            project.screenshots.find(s => typeof s === 'string')
-                        }
+                        src={project.screenshots.find(s => typeof s === 'string')}
                         alt={project.title}
                         className="w-full h-full object-cover"
                         loading="lazy"
                     />
 
-                    {/* Hover overlay */}
+                    {/* Hover overlay — desktop only */}
                     <button
                         onClick={() => onOpen(project)}
-                        className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        className="hidden md:flex absolute inset-0 items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         style={{ backgroundColor: 'rgba(14,26,28,0.82)' }}
+                        aria-label={`View details for ${project.title}`}
                     >
                         <span className="btn-primary inline-flex items-center gap-2 font-semibold px-5 py-2.5 rounded-lg text-sm">
                             View Details
@@ -1566,7 +1565,7 @@ function ProjectCard({ project, onOpen, delay }) {
                     </button>
                 </div>
 
-                <div className="p-6">
+                <div className="p-6 flex flex-col flex-1">
                     <span className="font-mono text-xs tracking-widest text-signal">
                         {project.category.toUpperCase()}
                     </span>
@@ -1586,12 +1585,20 @@ function ProjectCard({ project, onOpen, delay }) {
                             </span>
                         ))}
                     </div>
+
+                    {/* Body button — mobile only */}
+                    <button
+                        onClick={() => onOpen(project)}
+                        className="md:hidden mt-5 w-full inline-flex items-center justify-center gap-2 font-semibold px-4 py-2.5 rounded-lg text-sm btn-primary"
+                    >
+                        <Eye className="w-4 h-4" />
+                        View Details
+                    </button>
                 </div>
             </div>
         </Reveal>
     );
 }
-
 function ProjectModal({ project, onClose }) {
     const [index, setIndex] = useState(0);
 
