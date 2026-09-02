@@ -7,7 +7,7 @@
     @viteReactRefresh
     @vite(['resources/css/app.css', 'resources/js/app.jsx'])
 
-    <title>{{ config('app.name') }} — Portfolio</title>
+    <title>Akash - Portfolio</title>
 </head>
 <body>
 <div id="root"></div>

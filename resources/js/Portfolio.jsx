@@ -1466,7 +1466,7 @@ function Resume() {
 
                 <div className="text-center">
                     <a
-                        href="/Md_Arif_Fuad_Akash_Resume.pdf"
+                        href="/resume/Md_Arif_Fuad_Akash_Resume.pdf"
                         download
                         className="btn-primary inline-flex items-center gap-2 font-semibold px-6 py-3 rounded-lg"
                     >
