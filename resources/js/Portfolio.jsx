@@ -624,7 +624,10 @@ const PROJECTS = [
 
         screenshots: [
             // LinkedIn demo video — opens in a new tab, see patch 3 below.
-            { type: 'video', embedUrl: 'https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7486703993969070080?compact=1' },
+            {
+                type: 'video',
+                embedUrl: 'https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7505940427846340608?compact=1'
+            },
 
             '/images/projects/doura/splash.jpg',
             '/images/projects/doura/home.jpg',
