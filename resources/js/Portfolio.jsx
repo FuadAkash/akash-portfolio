@@ -243,7 +243,7 @@ const SERVICES = [
     },
 ];
 
-const PROJECT_CATEGORIES = ['All', 'Web', 'Android POS', 'Kiosk', 'Research'];
+const PROJECT_CATEGORIES = ['All', 'Web', 'Android POS', 'Kiosk', 'Mobile', 'Research'];
 
 const PROJECTS = [
     {
@@ -592,6 +592,62 @@ const PROJECTS = [
         ],
         liveUrl: 'https://ieeexplore.ieee.org/document/11490432',
         codeUrl: '#',
+    },
+    {
+        id: 8,
+        title: 'Doura',
+        category: 'Mobile',
+        icon: Smartphone,
+        shortDesc: 'Android journey planner covering every Swedish transit operator in one app — live departures, cross-operator routing and a stop-by-stop journey timeline.',
+        fullDesc: {
+            summary: 'Commuting between Stockholm and Uppsala means two transit authorities and two apps that each ignore the other. Doura treats Sweden as one network, because the underlying open data already does — SL, UL and every other operator come through the same calls.',
+            flow: [
+                'Search any stop in Sweden from a debounced picker, or let GPS find the nearest one',
+                'Pick origin and destination, a departure time, and which transport types to allow',
+                'App queries the route planner and returns journey options with times, changes and platforms',
+                'Tap a journey to open a vertical timeline of the whole trip',
+                'Timeline shows where to board, every stop along the way, where to change and how long the connection is',
+                'Boarding platforms are resolved separately from the live departure board, so a bus at Uppsala C shows its actual stand',
+            ],
+            features: [
+                { title: 'Nationwide stop search', desc: 'Debounced search over every stop in Sweden, ranked so prefix matches and busier stops surface first' },
+                { title: 'Cross-operator routing', desc: 'Journey planning that spans SL, UL, SJ and regional operators in a single result, filterable by train, metro, bus, tram or ferry' },
+                { title: 'Journey timeline', desc: 'Stop-by-stop vertical route showing boarding point, intermediate stops, change points with connection times, and where to get off' },
+                { title: 'Live departure boards', desc: 'Tap any stop for departures in the next hour with realtime delays, cancellations and platform designations, paging forward through the service day' },
+                { title: 'Nearby stops', desc: 'GPS position reverse-geocoded to a street name, then every stop within 2 km sorted by distance with the modes each one serves' },
+                { title: 'Platform resolution', desc: 'The route planner carries no stand or track data, so the app cross-references the departure board by line and minute to find it' },
+                { title: 'Ticket hints', desc: 'Reads the operator on each leg and names which authorities a journey touches — fares are not in open data, so it points at the right app rather than guessing' },
+            ],
+            closing: 'One search, one timeline, one app — regardless of how many operators the trip crosses.',
+        },
+        tech: ['Kotlin', 'Jetpack Compose', 'Material 3', 'Retrofit', 'Trafiklab API', 'MVVM', 'Play Services Location'],
+
+        screenshots: [
+            // LinkedIn demo video — opens in a new tab, see patch 3 below.
+            { type: 'video', embedUrl: 'https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7486703993969070080?compact=1' },
+
+            '/images/projects/doura/splash.jpg',
+            '/images/projects/doura/home.jpg',
+            '/images/projects/doura/picker.jpg',
+            '/images/projects/doura/results.jpg',
+            '/images/projects/doura/detail.jpg',
+            '/images/projects/doura/nearby.jpg',
+            '/images/projects/doura/about.jpg',
+        ],
+        screenshotCaptions: [
+            'Walkthrough of a cross-operator journey, from search to timeline.',
+            'Home screen — route search with time and transport-type filters.',
+            'Stop picker searching every stop in Sweden, with live suggestions.',
+            'Journey results showing departure, arrival, duration and changes.',
+            'Journey detail — stop-by-stop timeline with change points and platforms.',
+            'Live departure board for a stop, with realtime delays and stands.',
+            'Nearby stops found by GPS, sorted by walking distance.',
+        ],
+
+        liveUrl: '#',
+        codeUrl: 'https://github.com/FuadAkash/Doura',
+        downloadUrl: '/downloads/doura.apk',
+        downloadLabel: 'Download APK',
     },
 ];
 // const BLOG_POSTS = [
@@ -1795,6 +1851,16 @@ function ProjectModal({ project, onClose }) {
                                 <ExternalLink className="w-4 h-4" />
                             </a>
                         )}
+                        {project.downloadUrl && (
+                            <a
+                                href={project.downloadUrl}
+                                download
+                                className="btn-outline inline-flex items-center gap-2 font-semibold px-5 py-2.5 rounded-lg text-sm"
+                            >
+                                {project.downloadLabel ?? 'Download'}
+                                <Download className="w-4 h-4" />
+                            </a>
+                        )}
                     </div>
                 </div>
                 {/* Full-size image overlay */}
@@ -1984,19 +2050,60 @@ function ProjectDesc({ desc }) {
     );
 }
 function CarouselItem({ item, alt }) {
+    // Embeddable video (Google Drive, YouTube, Vimeo)
     if (item?.type === 'video') {
         return (
             <iframe
                 src={item.embedUrl}
                 title={alt}
                 className="w-full h-full"
-                style={{
-                    border: 'none',
-                    minHeight: '360px',
-                }}
+                style={{ border: 'none', minHeight: '360px' }}
                 allow="autoplay; fullscreen; encrypted-media"
                 allowFullScreen
             />
+        );
+    }
+
+    // Non-embeddable video (LinkedIn) — poster + click out
+    if (item?.type === 'external-video') {
+        return (
+            <a
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative block w-full h-full group/video"
+                aria-label={`Watch demo video — ${alt}`}
+            >
+                {item.poster ? (
+                    <img
+                        src={item.poster}
+                        alt={alt}
+                        className="w-full h-full object-contain"
+                        loading="lazy"
+                    />
+                ) : (
+                    <div
+                        className="w-full h-full"
+                        style={{ backgroundColor: 'var(--panel-2)' }}
+                    />
+                )}
+
+                <span
+                    className="absolute inset-0 flex flex-col items-center justify-center gap-3 transition-opacity"
+                    style={{ backgroundColor: 'rgba(14,26,28,0.55)' }}
+                >
+                    <span
+                        className="w-16 h-16 rounded-full flex items-center justify-center transition-transform group-hover/video:scale-110"
+                        style={{ backgroundColor: 'var(--brass)' }}
+                    >
+                        <Play className="w-7 h-7" style={{ color: 'var(--panel)' }} />
+                    </span>
+
+                    <span className="font-mono text-xs tracking-widest text-paper">
+                        WATCH DEMO
+                    </span>
+                </span>
+            </a>
         );
     }
 
@@ -2009,7 +2116,6 @@ function CarouselItem({ item, alt }) {
         />
     );
 }
-
 /* ------------------------------------------------------------------ */
 /*  BLOG                                                                */
 /* ------------------------------------------------------------------ */
